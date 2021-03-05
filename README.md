@@ -1,6 +1,6 @@
 # Linux command study 🚀
 
-> 리눅스 환경 개발에 로켓을 달자!
+> 리눅스 환경 개발에 로켓을 달자! 📗 [ref](https://www.44bits.io/ko/post/linux-and-mac-command-line-survival-guide-for-beginner#%EB%93%A4%EC%96%B4%EA%B0%80%EB%A9%B0)
 
 <br />
 <br />
