@@ -217,5 +217,99 @@ a     b     c     d     e     world
 `mv`는 파일 이름 이동, `cp`는 파일 복사에 사용합니다.
 
 ```shell
-cp
+cp <SRC> <DEST>
+mv <SRC> <DEST>
 ```
+
+여기서 `<SRC>`는 복사/이동하고자 하는 파일의 경로, `<DEST>`는 새로운 경로입니다. `a` 파일을 `airport`로 이름을 변경하고, `b` 파일을 복사해 `batman`파일을 만들어보겠습니다.
+
+```shell
+$ mv a airport
+$ ls
+airport b   c   d   e   world
+$ cp b batman
+$ ls
+airport b   batman  c   d   e   world
+```
+
+아래 명령어를 해석해봅시다.
+
+```shell
+$ mv airport world/
+```
+
+`world` 디렉터리 아래로 `airport`를 이동시킵니다. 라는 의미라는 것으로 해석되나요? 이 명령어는 `mv airport world/airport`와 같은 의미와 같습니다.
+
+다시 파일을 상위 디렉터리로 옮길때는 절대 경로(/User/xtring/hello)를 지정할 수 도 있지만, 상대경로(../)를 사용하는 것이 더 간단합니다.
+
+```shell
+$ mv airport ../
+$ cd ..
+$ ls
+airport b   batman  c   d   e   world
+```
+
+파일을 제거하기 위해서는 `rm` 명령어를 사용합니다. 디렉터리를 사용하는 명령어는 `rmdir`이 있지만 `rmdir`이 있지만 거의 사용하지 않고 `rm`에 옵션을 붙여 사용합니다. `rm <option> <name>`
+
+```
+$ rm -rf hello
+```
+
+`-rf` 명령어는 디렉터리와 그 아래의 모든 내용을 삭제할 수 있습니다. `rm` 명령어는 일반적인 삭제 방법과 다르게 바로 삭제됩니다. 이를 되돌릴 방법은 없으며 `rm -rf ~` 명령어를 실행하는 것은 매우 위험합니다. 기본적으로 관리자 권한에서 실행가능하지만 만에하나 시스템과 관련된 파일이 삭제되거나, 관리자 권한으로 실행되는 경우 대재앙을 맞이하게 될 것입니다.
+
+## 8. 문자열 출력, 파일과 관련된 셸 기본 명령어 모음
+
+문자열과 파일 내용을 출력하는 방법에 대해서 알아봅시다.
+
+`echo`는 인자를 받아서 화면에 출력해줍니다.
+
+```shell
+$ echo Hello, world!
+Hello, world!
+```
+
+`echo`를 독립적으로 쓸 일은 많지 않습니다. 커맨드라인에서 동작하는 프로그램을 작성할 때 화면에 문자열을 출력하는 기능으로 많이 사용됩니다.
+
+`echo`는 셸 스크립트에서 사용하거나, 환경변수 출력에 사용할 수 있습니다.
+
+```shell
+$ echo My home directory is $HOME.
+My home directory is /Users/xtring.
+```
+
+`$Home`이 `/Users/xtring`으로 치환된 것을 알 수 있습니다.
+
+다음으로는 파일 내용을 출력하는 `cat`, `head`, `tail` 명령어에 대해서 알아보겠습니다. 가장 기본이 되는 명령어는 `cat`입니다.
+
+`/etc`로 이동해서 `bashrc` 파일의 내용을 출력해봅시다.(또는 `bash.bashrc`)
+
+```shell
+$ cat bashrc
+# System-wide .bashrc file for interactive bash(1) shells.
+if [ -z "$PS1" ]; then
+   return
+fi
+
+PS1='\h:\W \u\$ '
+# Make bash check its window size after a process completes
+shopt -s checkwinsize
+
+[ -r "/etc/bashrc_$TERM_PROGRAM" ] && . "/etc/bashrc_$TERM_PROGRAM"
+```
+
+`cat`은 항상 파일의 전체 내용을 출력해줍니다. `head`는 파일의 앞부분 일부를 출력해주고, `tail`은 뒤에서 일부분을 출력해줍니다.
+여기서 옵션을 추가해줄 수 있는데 `-n` 옵션을 사용하면 `<N>`을 인자로 받습니다. `head -n 2 bashrc`와 같이 사용하면 '앞부분의 두 줄을 출력하라.'의 의미와 같습니다.(`-n 2`와 `-n2`는 같습니다.)
+
+반대로 `tail -n 2 bashrc`는 '마지막부분의 2줄을 출력하라.'라는 의미입니다.
+
+```shell
+$ head -n 2 bashrc
+# System-wide .bashrc file for interactive bash(1) shells.
+if [ -z "$PS1" ]; then
+
+$ tail -n 2 bashrc
+
+[ -r "/etc/bashrc_$TERM_PROGRAM" ] && . "/etc/bashrc_$TERM_PROGRAM"
+```
+
+`tail`은 `-f` 옵션과도 자주 사용됩니다. 예를 들어 서버 프로세스의 로그 파일의 경우, 서버에서 요청을 받을 때마다 로그 파일을 업데이트합니다. 이 때 `tail -f <FILE>`과 실행해두면, `tail` 프로그램이 종료되지 않고 업데이트되는 내용을 바로 출력해줍니다.
